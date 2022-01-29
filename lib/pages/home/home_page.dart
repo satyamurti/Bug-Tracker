@@ -56,7 +56,6 @@ class _HomePageState extends ConsumerState<HomePage> {
             flex: 8,
             child: PageView(
               pageSnapping: false,
-              scrollDirection: Axis.vertical,
               controller: controller,
               children: navScreens,
             ),
