@@ -1,3 +1,4 @@
+import 'package:bug_tracker/models/auth/product.dart';
 import 'package:bug_tracker/models/auth/user_info.dart';
 import 'package:bug_tracker/models/bug_priority.dart';
 import 'package:bug_tracker/models/role.dart';
@@ -6,16 +7,16 @@ import 'package:flutter/material.dart';
 
 class NewBugPage extends StatelessWidget {
   final UserInfo userInfo;
-  final String productId;
+  final Product product;
 
-  const NewBugPage({Key? key, required this.userInfo, required this.productId})
+  const NewBugPage({Key? key, required this.userInfo, required this.product})
       : super(key: key);
 
   @override
   build(context) => Scaffold(
         appBar: AppBar(
           // TODO: show product name instead of id
-          title: Text('New Bug in $productId'),
+          title: Text('New Bug in ${product.name}'),
         ),
         body: content(),
         bottomNavigationBar: Padding(
@@ -54,11 +55,11 @@ class NewBugPage extends StatelessWidget {
                   const InputDecoration(label: Text('Priority')),
             ),
             const SizedBox(height: 20),
-            // TODO: fetch members of team and show
+            // TODO: add check for min 1 maintainer
             DropdownSearch.multiSelection(
               mode: Mode.MENU,
-              items: const ['Muhesh', 'Satya', 'Sudhindra'],
-              selectedItems: const ['Muhesh'],
+              items: product.maintainers + product.devs,
+              selectedItems: const [],
               dropdownSearchDecoration:
                   const InputDecoration(label: Text('Assigned To')),
             ),

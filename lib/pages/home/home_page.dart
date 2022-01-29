@@ -1,3 +1,4 @@
+import 'package:bug_tracker/models/auth/product.dart';
 import 'package:bug_tracker/models/auth/user_info.dart';
 import 'package:bug_tracker/pages/error_page.dart';
 import 'package:bug_tracker/pages/home/new_bug_page.dart';
@@ -33,7 +34,14 @@ class _HomePageState extends ConsumerState<HomePage> {
             // TODO: remove this in the end
             data: (data) => NewBugPage(
               userInfo: data.value,
-              productId: 'dsflkd',
+              product: Product(
+                '1',
+                '2',
+                'Dalal Street',
+                'Best Pragyan Event',
+                ['Siva', 'Satya'],
+                ['Ajitha', 'Dhruv', 'Sailesh'],
+              ),
             ),
             loading: (_) => const LoadingPage(),
             error: (error) => ErrorPage(
