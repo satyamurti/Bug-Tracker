@@ -1,10 +1,10 @@
 import 'package:bug_tracker/models/auth/user_info.dart';
 
 class Product {
-  String id;
-  String orgId;
-  String name, desc;
-  List<UserInfo> maintainers, developers;
+  String? id;
+  String? orgId;
+  String? name, desc;
+  List<UserInfo>? maintainers, developers;
 
   Product(
     this.id,

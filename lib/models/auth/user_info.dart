@@ -26,7 +26,7 @@ class UserInfo {
         // cast List<dynamic> to List<String>
         teams = List<String>.from(snapshot['teams']),
         isLead = snapshot['isLead'],
-        bugsResovled = snapshot['bugsResovled'],
+        bugsResovled = snapshot['bugsResolved'],
         bugsPending = snapshot['bugsPending'],
         bugsOverdue = snapshot['bugsOverdue'];
 

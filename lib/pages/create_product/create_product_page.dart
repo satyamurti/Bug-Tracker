@@ -4,11 +4,12 @@ import 'package:bug_tracker/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-Product? product;
+// Create a dummy product using product model
+var product = Product('id', 'name', 'desc', 'orgId', null, null);
 
 // ignore: must_be_immutable
 class CreateProductPage extends ConsumerStatefulWidget {
-  CreateProductPage({Key? key}) : super(key: key);
+  const CreateProductPage({Key? key}) : super(key: key);
 
   @override
   ConsumerState<CreateProductPage> createState() => _CreateProductPage();
@@ -32,25 +33,42 @@ class _CreateProductPage extends ConsumerState<CreateProductPage> {
                   TextField(
                     controller: name,
                     decoration: const InputDecoration(labelText: 'Name'),
+                    onChanged: (value) {
+                      product.name = value;
+                    },
                   ),
                   TextField(
                     controller: description,
                     decoration: const InputDecoration(labelText: 'Description'),
+                    onChanged: (value) {
+                      product.desc = value;
+                    },
                   ),
                   const SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () async {
+                  TextButton(
+                    style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        backgroundColor: Colors.black),
+                    onPressed: () {
                       showModalBottomSheet(
                         context: context,
                         builder: (context) {
-                          return TaskAssigneeWidget(
+                          return DeveloperWidget(
                             users: users,
                           );
                         },
                       );
                     },
-                    child: const Text(
-                      'Select Developers',
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 2),
+                      child: Text('Select Developers',
+                          style: Theme.of(context)
+                              .textTheme
+                              .button
+                              ?.copyWith(color: Colors.white)),
                     ),
                   ),
                   const Text(
@@ -62,20 +80,21 @@ class _CreateProductPage extends ConsumerState<CreateProductPage> {
           }));
 }
 
-class TaskAssigneeWidget extends StatefulWidget {
+class DeveloperWidget extends StatefulWidget {
   List<UserInfo> users = [];
-  TaskAssigneeWidget({
+  DeveloperWidget({
     Key? key,
     required this.users,
   }) : super(key: key);
 
   @override
-  _TaskAssigneeWidgetState createState() => _TaskAssigneeWidgetState();
+  _DeveloperWidgetState createState() => _DeveloperWidgetState();
 }
 
-class _TaskAssigneeWidgetState extends State<TaskAssigneeWidget> {
+class _DeveloperWidgetState extends State<DeveloperWidget> {
   List<UserInfo> users = [];
   bool isChecked = false;
+  List<UserInfo> devlopers = [];
 
   @override
   Widget build(BuildContext context) {
@@ -95,15 +114,53 @@ class _TaskAssigneeWidgetState extends State<TaskAssigneeWidget> {
             shrinkWrap: true,
             padding: const EdgeInsets.all(24),
             children: List.generate(widget.users.length, (index) {
-              return AssigneeTileWidget(
-                isChecked: _isChecked(widget.users[index]),
-                selectedUserInfo: widget.users[index],
-                onTap: (UserInfo user) {
-                  setState(() {
-                    isChecked = true;
-                  });
-                  product!.developers = users;
-                },
+              var user = widget.users[index];
+              return ListTile(
+                leading: const CircleAvatar(
+                  radius: 20,
+                  backgroundImage: NetworkImage(
+                      'https://i.pinimg.com/736x/7a/4b/4e/7a4b4eec27c898143aff26890e4f127a.jpg'),
+                ),
+                title: Text(
+                  user.userName,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                trailing: GestureDetector(
+                  onTap: () {
+                    print(devlopers);
+                    if (devlopers.contains(user)) {
+                      devlopers.remove(user);
+                      setState(() {
+                        isChecked = false;
+                      });
+                      isChecked = false;
+                    } else {
+                      devlopers.add(user);
+                      setState(() {
+                        print('hello thambi');
+                        isChecked = false;
+                      });
+                    }
+                    product.developers = devlopers;
+                  },
+                  child: Material(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(45),
+                        side: BorderSide(
+                            color:
+                                isChecked ? Colors.transparent : Colors.grey)),
+                    child: CircleAvatar(
+                      radius: 12,
+                      backgroundColor:
+                          isChecked ? Colors.green : Colors.transparent,
+                      child: Icon(
+                        Icons.check,
+                        color: isChecked ? Colors.white : Colors.grey,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                ),
               );
             }),
           ),
@@ -117,11 +174,10 @@ class _TaskAssigneeWidgetState extends State<TaskAssigneeWidget> {
                 ),
                 backgroundColor: Colors.black),
             onPressed: () {
-              setState(() {
-                product!.developers = users;
-              });
-              if (product!.developers.isNotEmpty) {
+              if (product.developers!.isNotEmpty) {
                 Navigator.pop(context);
+              } else {
+                print(product);
               }
             },
             child: Padding(
@@ -135,62 +191,6 @@ class _TaskAssigneeWidgetState extends State<TaskAssigneeWidget> {
           ),
           const SizedBox(height: 15),
         ],
-      ),
-    );
-  }
-
-  _isChecked(UserInfo user) {
-    if (product != null) {
-      if (product!.developers.contains(user)) {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  }
-}
-
-class AssigneeTileWidget extends StatelessWidget {
-  const AssigneeTileWidget(
-      {Key? key,
-      required this.onTap,
-      required this.selectedUserInfo,
-      required this.isChecked})
-      : super(key: key);
-  final bool isChecked;
-  final UserInfo selectedUserInfo;
-  final Function onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        radius: 20,
-        backgroundImage: NetworkImage(selectedUserInfo.userName),
-      ),
-      title: Text(
-        selectedUserInfo.userName,
-        style: Theme.of(context).textTheme.bodyText1,
-      ),
-      trailing: GestureDetector(
-        onTap: () {
-          onTap(selectedUserInfo);
-        },
-        child: Material(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(45),
-              side: BorderSide(
-                  color: isChecked ? Colors.transparent : Colors.grey)),
-          child: CircleAvatar(
-            radius: 12,
-            backgroundColor: isChecked ? Colors.green : Colors.transparent,
-            child: Icon(
-              Icons.check,
-              color: isChecked ? Colors.white : Colors.grey,
-              size: 18,
-            ),
-          ),
-        ),
       ),
     );
   }

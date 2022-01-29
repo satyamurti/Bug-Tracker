@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final firebaseIdeaProvider = StreamProvider.autoDispose<List<UserInfo>>((ref) {
   final stream = FirebaseFirestore.instance.collection('users').snapshots();
   return stream.map((snapshot) => snapshot.docs.map((doc) {
+        print(doc.data());
         return UserInfo.fromSnapshot(doc.data());
       }).toList());
 });
