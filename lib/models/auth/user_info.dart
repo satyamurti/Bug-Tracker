@@ -18,7 +18,7 @@ class UserInfo {
     this.bugsOverdue,
     this.isLead,
   );
-  User.fromSnapshot(Map<String, dynamic> snapshot)
+  UserInfo.fromSnapshot(Map<String, dynamic> snapshot)
       : id = snapshot['id'],
         userName = snapshot['userName'],
         email = snapshot['email'],

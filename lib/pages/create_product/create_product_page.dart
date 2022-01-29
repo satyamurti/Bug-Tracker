@@ -1,5 +1,5 @@
 import 'package:bug_tracker/models/auth/team.dart';
-import 'package:bug_tracker/models/auth/user.dart';
+import 'package:bug_tracker/models/auth/user_info.dart';
 import 'package:bug_tracker/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,14 +7,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 Product? product;
 
 // ignore: must_be_immutable
-class CreateProductPage extends ConsumerWidget {
-  TextEditingController name = TextEditingController(),
-      description = TextEditingController();
-
+class CreateProductPage extends ConsumerStatefulWidget {
   CreateProductPage({Key? key}) : super(key: key);
 
   @override
-  build(BuildContext context, WidgetRef ref) => Scaffold(
+  ConsumerState<CreateProductPage> createState() => _CreateProductPage();
+}
+
+class _CreateProductPage extends ConsumerState<CreateProductPage> {
+  TextEditingController name = TextEditingController(),
+      description = TextEditingController();
+  @override
+  build(BuildContext context) => Scaffold(
       appBar: AppBar(title: const Text('Create a new product')),
       body: ref.watch(firebaseIdeaProvider).when(
           loading: () => const Center(child: CircularProgressIndicator()),
@@ -59,7 +63,7 @@ class CreateProductPage extends ConsumerWidget {
 }
 
 class TaskAssigneeWidget extends StatefulWidget {
-  List<User> users = [];
+  List<UserInfo> users = [];
   TaskAssigneeWidget({
     Key? key,
     required this.users,
@@ -70,7 +74,7 @@ class TaskAssigneeWidget extends StatefulWidget {
 }
 
 class _TaskAssigneeWidgetState extends State<TaskAssigneeWidget> {
-  List<User> users = [];
+  List<UserInfo> users = [];
   bool isChecked = false;
 
   @override
@@ -93,8 +97,8 @@ class _TaskAssigneeWidgetState extends State<TaskAssigneeWidget> {
             children: List.generate(widget.users.length, (index) {
               return AssigneeTileWidget(
                 isChecked: _isChecked(widget.users[index]),
-                selectedUser: widget.users[index],
-                onTap: (User user) {
+                selectedUserInfo: widget.users[index],
+                onTap: (UserInfo user) {
                   setState(() {
                     isChecked = true;
                   });
@@ -135,7 +139,7 @@ class _TaskAssigneeWidgetState extends State<TaskAssigneeWidget> {
     );
   }
 
-  _isChecked(User user) {
+  _isChecked(UserInfo user) {
     if (product != null) {
       if (product!.developers.contains(user)) {
         return true;
@@ -150,11 +154,11 @@ class AssigneeTileWidget extends StatelessWidget {
   const AssigneeTileWidget(
       {Key? key,
       required this.onTap,
-      required this.selectedUser,
+      required this.selectedUserInfo,
       required this.isChecked})
       : super(key: key);
   final bool isChecked;
-  final User selectedUser;
+  final UserInfo selectedUserInfo;
   final Function onTap;
 
   @override
@@ -162,15 +166,15 @@ class AssigneeTileWidget extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         radius: 20,
-        backgroundImage: NetworkImage(selectedUser.userName),
+        backgroundImage: NetworkImage(selectedUserInfo.userName),
       ),
       title: Text(
-        selectedUser.userName,
+        selectedUserInfo.userName,
         style: Theme.of(context).textTheme.bodyText1,
       ),
       trailing: GestureDetector(
         onTap: () {
-          onTap(selectedUser);
+          onTap(selectedUserInfo);
         },
         child: Material(
           shape: RoundedRectangleBorder(

@@ -1,10 +1,10 @@
-import 'package:bug_tracker/models/auth/user.dart';
+import 'package:bug_tracker/models/auth/user_info.dart';
 
 class Product {
   String id;
   String orgId;
   String name, desc;
-  List<User> maintainers, developers;
+  List<UserInfo> maintainers, developers;
 
   Product(
     this.id,
@@ -19,8 +19,8 @@ class Product {
         orgId = snapshot['orgId'],
         name = snapshot['name'],
         desc = snapshot['desc'],
-        maintainers = List<User>.from(snapshot['maintainers']),
-        developers = List<User>.from(snapshot['developers']);
+        maintainers = List<UserInfo>.from(snapshot['maintainers']),
+        developers = List<UserInfo>.from(snapshot['developers']);
 
   Map<String, dynamic> toJson() => {
         'id': id,
