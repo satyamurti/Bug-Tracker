@@ -1,7 +1,7 @@
 class User {
   final String id;
   final String userName;
-  final String name, email;
+  final String email;
   final String orgId;
   final List<String> teams;
   final int bugsResovled, bugsPending, bugsOverdue;
@@ -9,7 +9,6 @@ class User {
   User(
     this.id,
     this.userName,
-    this.name,
     this.email,
     this.orgId,
     this.teams,
