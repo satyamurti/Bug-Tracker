@@ -4,6 +4,7 @@ class User {
   final String name, email;
   final String orgId;
   final List<String> teams;
+  final int bugsResovled, bugsPending, bugsOverdue;
 
   User(
     this.id,
@@ -12,5 +13,8 @@ class User {
     this.email,
     this.orgId,
     this.teams,
+    this.bugsResovled,
+    this.bugsPending,
+    this.bugsOverdue,
   );
 }
