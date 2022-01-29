@@ -6,13 +6,16 @@ import 'package:flutter/material.dart';
 
 class NewBugPage extends StatelessWidget {
   final UserInfo userInfo;
+  final String productId;
 
-  const NewBugPage({Key? key, required this.userInfo}) : super(key: key);
+  const NewBugPage({Key? key, required this.userInfo, required this.productId})
+      : super(key: key);
 
   @override
   build(context) => Scaffold(
         appBar: AppBar(
-          title: const Text('New Bug'),
+          // TODO: show product name instead of id
+          title: Text('New Bug in $productId'),
         ),
         body: content(),
         bottomNavigationBar: Padding(
@@ -34,13 +37,6 @@ class NewBugPage extends StatelessWidget {
             const TextField(decoration: InputDecoration(labelText: 'Title')),
             const TextField(
                 decoration: InputDecoration(labelText: 'Description')),
-            DropdownSearch(
-              mode: Mode.MENU,
-              items: userInfo.teams,
-              selectedItem: userInfo.teams[0],
-              dropdownSearchDecoration:
-                  const InputDecoration(label: Text('Team')),
-            ),
             const SizedBox(height: 20),
             DropdownSearch(
               mode: Mode.MENU,
@@ -57,7 +53,15 @@ class NewBugPage extends StatelessWidget {
               dropdownSearchDecoration:
                   const InputDecoration(label: Text('Priority')),
             ),
-            // TODO: assignees selection
+            const SizedBox(height: 20),
+            // TODO: fetch members of team and show
+            DropdownSearch.multiSelection(
+              mode: Mode.MENU,
+              items: const ['Muhesh', 'Satya', 'Sudhindra'],
+              selectedItems: const ['Muhesh'],
+              dropdownSearchDecoration:
+                  const InputDecoration(label: Text('Assigned To')),
+            ),
             // TODO: deadline selection
           ],
         ),
