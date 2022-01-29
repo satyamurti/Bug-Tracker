@@ -1,3 +1,4 @@
+import 'package:bug_tracker/models/auth/user_info.dart';
 import 'package:bug_tracker/pages/error_page.dart';
 import 'package:bug_tracker/pages/home/widgets/nav_bar.dart';
 import 'package:bug_tracker/pages/loading_page.dart';
@@ -17,7 +18,7 @@ class HomePage extends ConsumerStatefulWidget {
 final userInfoProvider = FutureProvider.family((ref, String id) async {
   final doc =
       await FirebaseFirestore.instance.collection('users').doc(id).get();
-  return doc.data()!;
+  return UserInfo.fromMap(doc.data()!);
 });
 
 class _HomePageState extends ConsumerState<HomePage> {
@@ -53,11 +54,11 @@ class _HomePageState extends ConsumerState<HomePage> {
         ],
       );
 
-  Widget debugContent(Map<String, dynamic> userInfo) => Center(
+  Widget debugContent(UserInfo userInfo) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(userInfo.toString()),
+            Text('username = ${userInfo.userName}'),
             ElevatedButton(
               onPressed: () {
                 final auth = ref.watch(authenticationProvider);
