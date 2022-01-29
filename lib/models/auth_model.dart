@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class Authentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  User? get currentUser => _auth.currentUser;
   Stream<User?> get authStateChange => _auth.authStateChanges();
 
   Future<void> signInWithEmailAndPassword(

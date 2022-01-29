@@ -1,5 +1,4 @@
 import 'package:bug_tracker/pages/auth/login_page.dart';
-import 'package:bug_tracker/pages/auth/register_page.dart';
 import 'package:bug_tracker/pages/error_page.dart';
 import 'package:bug_tracker/pages/home/home_page.dart';
 import 'package:bug_tracker/pages/loading_page.dart';
@@ -16,7 +15,7 @@ class AuthChecker extends ConsumerWidget {
     return _authState.when(
       data: (data) {
         if (data != null) return const HomePage();
-        return const RegisterPage();
+        return const LoginPage();
       },
       loading: () => const LoadingPage(),
       error: (e, trace) => ErrorPage(
