@@ -1,4 +1,5 @@
 import 'package:bug_tracker/providers/auth_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -66,5 +67,15 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     }
   }
 
-  Future<void> registerUserDoc(User user) async {}
+  Future<void> registerUserDoc(User user) async {
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
+      {
+        'id': user.uid,
+        'userName': userName.text,
+        'email': email.text,
+        'orgId': org.text,
+      },
+    );
+    print('user doc added');
+  }
 }
