@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bug_tracker/models/bug_priority.dart';
+import 'package:bug_tracker/models/bug_status.dart';
+import 'package:bug_tracker/models/role.dart';
 
 class Bug {
   var id;
@@ -12,6 +15,10 @@ class Bug {
   final List<String> assignees, maintainers;
   final DateTime created;
   final DateTime due;
+
+  // factory Bug.fromJson(Map<String, dynamic> json) => _$BugFromJson(json);
+
+  // Map<String, dynamic> toJson() => _$BugToJson(this);
 
   Bug(
       this.id,
