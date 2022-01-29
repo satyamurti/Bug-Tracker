@@ -14,38 +14,27 @@ class HomePage extends ConsumerStatefulWidget {
   ConsumerState<HomePage> createState() => _HomePageState();
 }
 
+final userInfoProvider = FutureProvider.family((ref, String id) async {
+  final doc =
+      await FirebaseFirestore.instance.collection('users').doc(id).get();
+  return doc.data()!;
+});
+
 class _HomePageState extends ConsumerState<HomePage> {
   String get uid => ref.read(authenticationProvider).currentUser!.uid;
-
-  late FutureProvider<Map<String, dynamic>> userInfoProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    userInfoProvider = FutureProvider((ref) async {
-      final doc =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      return doc.data()!;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     final PageController controller = PageController();
     return Scaffold(
-      body: Consumer(builder: (context, ref, _) {
-        final asyncValue = ref.watch(userInfoProvider);
-        return asyncValue.map(
-          data: (data) => debugContent(data.value),
-          // data: (date) => content(controller),
-          loading: (_) => const LoadingPage(),
-          error: (error) => ErrorPage(
-            e: error.error,
-            trace: error.stackTrace,
+      body: ref.watch(userInfoProvider(uid)).map(
+            data: (data) => debugContent(data.value),
+            loading: (_) => const LoadingPage(),
+            error: (error) => ErrorPage(
+              e: error.error,
+              trace: error.stackTrace,
+            ),
           ),
-        );
-        // return ;
-      }),
     );
   }
 
