@@ -1,3 +1,4 @@
+import 'package:bug_tracker/components/date_picker_button.dart';
 import 'package:bug_tracker/models/auth/product.dart';
 import 'package:bug_tracker/models/auth/user_info.dart';
 import 'package:bug_tracker/models/bug_priority.dart';
@@ -63,7 +64,8 @@ class NewBugPage extends StatelessWidget {
               dropdownSearchDecoration:
                   const InputDecoration(label: Text('Assigned To')),
             ),
-            // TODO: deadline selection
+            const SizedBox(height: 20),
+            const DatePickerButton(),
           ],
         ),
       );
