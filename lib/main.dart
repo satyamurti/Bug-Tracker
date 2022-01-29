@@ -1,6 +1,5 @@
 import 'package:bug_tracker/pages/auth_checker.dart';
 import 'package:bug_tracker/pages/error_page.dart';
-import 'package:bug_tracker/pages/home/home_page.dart';
 import 'package:bug_tracker/pages/loading_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -41,7 +40,7 @@ class MyApp extends ConsumerWidget {
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: initialize.when(
-        data: (data) => const HomePage(),
+        data: (data) => const AuthChecker(),
         loading: () => const LoadingPage(),
         error: (e, stackTrace) => ErrorPage(
           e: e,

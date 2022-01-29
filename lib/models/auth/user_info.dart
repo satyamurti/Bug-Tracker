@@ -1,4 +1,4 @@
-class User {
+class UserInfo {
   final String id;
   final String userName;
   final String email;
@@ -6,7 +6,7 @@ class User {
   final List<String> teams;
   final int bugsResovled, bugsPending, bugsOverdue;
 
-  User(
+  UserInfo(
     this.id,
     this.userName,
     this.email,

@@ -3,14 +3,14 @@ import 'package:bug_tracker/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   TextEditingController email = TextEditingController(),
       password = TextEditingController();
 
@@ -30,20 +30,11 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: const InputDecoration(labelText: 'Password'),
               ),
               const SizedBox(height: 20),
-              Consumer(
-                builder: (context, ref, _) => SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      final auth = ref.watch(authenticationProvider);
-                      auth.signInWithEmailAndPassword(
-                        email.text,
-                        password.text,
-                        context,
-                      );
-                    },
-                    child: const Text('Login'),
-                  ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: onLoginClick,
+                  child: const Text('Login'),
                 ),
               ),
               const SizedBox(height: 20),
@@ -58,6 +49,15 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       );
+
+  void onLoginClick() {
+    final auth = ref.read(authenticationProvider);
+    auth.signInWithEmailAndPassword(
+      email.text,
+      password.text,
+      context,
+    );
+  }
 
   void onRegisterClick() => Navigator.of(context)
       .push(MaterialPageRoute(builder: (context) => RegisterPage()));
