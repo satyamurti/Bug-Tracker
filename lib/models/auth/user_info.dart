@@ -1,4 +1,4 @@
-class User {
+class UserInfo {
   final String id;
   final String userName;
   final String email;
@@ -7,7 +7,7 @@ class User {
   final int bugsResovled, bugsPending, bugsOverdue;
   final bool isLead;
 
-  User(
+  UserInfo(
     this.id,
     this.userName,
     this.email,
