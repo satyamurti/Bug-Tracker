@@ -1,27 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DatePickerButton extends StatefulWidget {
-  const DatePickerButton({Key? key}) : super(key: key);
+  final String text;
+  final void Function(DateTime date) onDateSelected;
+
+  const DatePickerButton({
+    Key? key,
+    required this.text,
+    required this.onDateSelected,
+  }) : super(key: key);
 
   @override
   _DatePickerButtonState createState() => _DatePickerButtonState();
 }
 
 class _DatePickerButtonState extends State<DatePickerButton> {
+  bool firstSelect = true;
+  DateTime date = DateTime.now();
+
   @override
   build(context) => ElevatedButton(
-        onPressed: onPress,
-        child: const Text('Select Date'),
+        onPressed: showDialog,
+        child: Text(
+          firstSelect ? widget.text : DateFormat('dd-MM-yyyy').format(date),
+        ),
       );
 
-  Future<void> onPress() async {
+  Future<void> showDialog() async {
     final curTime = DateTime.now();
-    final newTime = await showDatePicker(
+    final newDate = await showDatePicker(
       context: context,
-      initialDate: curTime,
+      initialDate: date,
       firstDate: curTime,
-      lastDate: curTime.add(const Duration(days: 300)),
+      lastDate: curTime.add(const Duration(days: 100)),
     );
-    print(newTime);
+    if (newDate != null) {
+      setState(() {
+        firstSelect = false;
+        date = newDate;
+      });
+      widget.onDateSelected(newDate);
+    }
   }
 }

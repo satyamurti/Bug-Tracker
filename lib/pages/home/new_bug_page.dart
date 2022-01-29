@@ -65,7 +65,10 @@ class NewBugPage extends StatelessWidget {
                   const InputDecoration(label: Text('Assigned To')),
             ),
             const SizedBox(height: 20),
-            const DatePickerButton(),
+            DatePickerButton(
+              text: 'Deadline',
+              onDateSelected: (date) => print('Selected date = $date'),
+            ),
           ],
         ),
       );
