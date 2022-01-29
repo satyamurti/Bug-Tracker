@@ -4,5 +4,5 @@ class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  build(context) => Container();
+  build(context) => const Center(child: Text('Login'),);
 }
