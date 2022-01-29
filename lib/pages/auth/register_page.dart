@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // TODO: add confirm password
-class RegisterPage extends StatelessWidget {
-  RegisterPage({Key? key}) : super(key: key);
+class RegisterPage extends ConsumerStatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
+  @override
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   final TextEditingController userName = TextEditingController(),
       email = TextEditingController(),
       org = TextEditingController(),
@@ -37,29 +42,29 @@ class RegisterPage extends StatelessWidget {
                 decoration: const InputDecoration(labelText: 'Password'),
               ),
               const SizedBox(height: 20),
-              Consumer(
-                builder: (context, ref, _) => SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final _auth = ref.watch(authenticationProvider);
-                      final cred = await _auth.signUpWithEmailAndPassword(
-                        email.text,
-                        password.text,
-                        context,
-                      );
-                      if (cred != null && cred.user != null) {
-                        registerUserDoc(cred.user!);
-                      }
-                    },
-                    child: const Text('Register'),
-                  ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: onRegisterClick,
+                  child: const Text('Register'),
                 ),
               ),
             ],
           ),
         ),
       );
+
+  Future<void> onRegisterClick() async {
+    final _auth = ref.read(authenticationProvider);
+    final cred = await _auth.signUpWithEmailAndPassword(
+      email.text,
+      password.text,
+      context,
+    );
+    if (cred != null && cred.user != null) {
+      registerUserDoc(cred.user!);
+    }
+  }
 
   Future<void> registerUserDoc(User user) async {}
 }
