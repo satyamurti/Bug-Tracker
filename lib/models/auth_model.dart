@@ -33,18 +33,18 @@ class Authentication {
     }
   }
 
-  Future<void> signUpWithEmailAndPassword(
+  Future<UserCredential?> signUpWithEmailAndPassword(
     String email,
     String password,
     BuildContext context,
   ) async {
     try {
-      _auth.createUserWithEmailAndPassword(
+      return _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
     } on FirebaseAuthException catch (e) {
-      await showDialog(
+      showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Error Occured'),
@@ -59,12 +59,14 @@ class Authentication {
           ],
         ),
       );
+      return null;
     } catch (e) {
       if (e == 'email-already-in-use') {
         print('Email already in use.');
       } else {
         print('Error: $e');
       }
+      return null;
     }
   }
 
