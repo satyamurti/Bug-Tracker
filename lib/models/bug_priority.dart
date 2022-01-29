@@ -5,3 +5,5 @@ enum BugPriority {
   critical,
   catastrophic,
 }
+
+const priorityList = ['Minor', 'Medium', 'High', 'Critical', 'Catastrophic'];

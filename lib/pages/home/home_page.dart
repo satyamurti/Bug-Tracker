@@ -1,5 +1,6 @@
 import 'package:bug_tracker/models/auth/user_info.dart';
 import 'package:bug_tracker/pages/error_page.dart';
+import 'package:bug_tracker/pages/home/new_bug_page.dart';
 import 'package:bug_tracker/pages/home/widgets/nav_bar.dart';
 import 'package:bug_tracker/pages/loading_page.dart';
 import 'package:bug_tracker/providers/auth_provider.dart';
