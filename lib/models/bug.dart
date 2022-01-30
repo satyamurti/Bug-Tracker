@@ -7,7 +7,7 @@ part 'bug.g.dart';
 
 @JsonSerializable()
 class Bug {
-  final String id;
+  String id;
   final String name;
   final String description;
   final String authorId, productId, orgId;
