@@ -27,6 +27,34 @@ class BugsProvider {
     }
   }
 
+  Stream<List<Bug>> getResolvedBugs() {
+    try {
+      return _firestore
+          .collection('bugs')
+          .where('status', isEqualTo: 'Resolved')
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map((document) {
+                var product = Bug.fromJson(document.data());
+                product.id = document.id;
+
+                return product;
+              }).toList());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> resolveBug(Bug bug, WidgetRef ref) async {
+    await _firestore
+        .collection('bugs')
+        .doc(bug.id)
+        .update({"status": 'Resolved'});
+    await _firestore.collection('bugs').doc(bug.id).get().then((value) {
+      ref.read(discussionStateProvider.notifier).value =
+          Bug.fromJson(value.data()!);
+    });
+  }
+
   Future<void> postMessage(String message, Bug bug, WidgetRef ref) async {
     var documentReference =
         _firestore.collection('users').doc(auth.currentUser!.uid).get();
@@ -80,10 +108,18 @@ final bugIndexProvider =
 
 class DiscussionStateNotifier extends StateNotifier<Bug?> {
   DiscussionStateNotifier() : super(null);
-  set value(Bug product) => state = product;
+  set value(Bug? product) => state = product;
 }
 
 final discussionStateProvider =
     StateNotifierProvider((ref) => DiscussionStateNotifier());
+
+class ResolveStateNotifier extends StateNotifier<bool> {
+  ResolveStateNotifier() : super(false);
+  set value(bool product) => state = product;
+}
+
+final resolveStateProvider =
+    StateNotifierProvider((ref) => ResolveStateNotifier());
 
 final bugsProvider = Provider((ref) => BugsProvider());

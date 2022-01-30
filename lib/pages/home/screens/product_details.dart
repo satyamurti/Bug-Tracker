@@ -1,10 +1,9 @@
-import 'dart:ui';
-
 import 'package:bug_tracker/models/bug.dart';
 import 'package:bug_tracker/models/bug_details.dart';
 import 'package:bug_tracker/providers/bugs_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ProductDetails extends ConsumerWidget {
   const ProductDetails({Key? key}) : super(key: key);
@@ -14,9 +13,10 @@ class ProductDetails extends ConsumerWidget {
     final bugsprod = ref.read(bugsProvider);
     final Bug? discussion = ref.watch(discussionStateProvider) as Bug?;
     final String bugStateNotifier = ref.watch(bugStateProvider) as String;
+
     TextEditingController controller = TextEditingController();
     return bugStateNotifier == ""
-        ? const Center(child: Text('Select'))
+        ? Center(child: SvgPicture.asset('assets/bug1.svg'))
         : StreamBuilder<List<Bug>>(
             stream: bugsprod.getProductList(bugStateNotifier),
             builder: (context, snapshot) {
@@ -47,6 +47,7 @@ class ProductDetails extends ConsumerWidget {
                     'count': bugs.pending
                   },
                 ];
+
                 return discussion != null
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -78,20 +79,97 @@ class ProductDetails extends ConsumerWidget {
                                   discussion.status.toString(),
                                   style: const TextStyle(color: Colors.white),
                                 ),
-                              ))
+                              )),
+                              discussion.status == "Raised"
+                                  ? Expanded(
+                                      child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: TextButton(
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.purple),
+                                              ),
+                                              onPressed: () async {
+                                                bugsprod.resolveBug(
+                                                    discussion, ref);
+                                                ref
+                                                    .read(resolveStateProvider
+                                                        .notifier)
+                                                    .value = true;
+                                              },
+                                              child: const Text(
+                                                'Resolve',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ))))
+                                  : Container()
                             ])),
                             Flexible(
                                 child: Container(
                               alignment: Alignment.topLeft,
                               padding: EdgeInsets.symmetric(
                                   vertical: 5, horizontal: 10),
-                              child: Text(
-                                  'Description: ' + discussion.description,
+                              child: Text(discussion.description,
                                   style: TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500)),
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 20)),
                             )),
+                            Flexible(
+                                child: Container(
+                                    alignment: Alignment.topLeft,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 10),
+                                    child: ListView.builder(
+                                        itemCount:
+                                            discussion.assignees.length + 1,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return index == 0
+                                              ? const Text('Maintainers: ',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20))
+                                              : Text(
+                                                  discussion
+                                                      .maintainers[index - 1]
+                                                      .name,
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 20),
+                                                );
+                                        }))),
+                            Flexible(
+                                child: Container(
+                                    alignment: Alignment.topLeft,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 10),
+                                    child: ListView.builder(
+                                        itemCount:
+                                            discussion.assignees.length + 1,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return index == 0
+                                              ? const Text('Assignees: ',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20))
+                                              : Text(
+                                                  discussion
+                                                      .assignees[index - 1]
+                                                      .name,
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 20),
+                                                );
+                                        }))),
                             const Flexible(
                                 child: Padding(
                               padding: EdgeInsets.symmetric(

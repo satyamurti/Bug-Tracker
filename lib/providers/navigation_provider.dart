@@ -1,4 +1,5 @@
 import 'package:bug_tracker/pages/home/screens/bugs_screen.dart';
+import 'package:bug_tracker/pages/home/screens/feeds_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,12 +12,12 @@ final indexProvider = StateNotifierProvider((ref) => NavStateNotifier());
 
 final navItems = [
   {'name': 'Bugs', 'icon': Icons.bug_report_sharp},
-  {'name': 'Dashboard', 'icon': Icons.dashboard},
+  {'name': 'Feeds', 'icon': Icons.dashboard},
   {'name': 'Teams', 'icon': Icons.group}
 ];
 
 const List<Widget> navScreens = [
   BugScreen(),
-  Center(child: Text('DashBoard')),
+  FeedsScreen(),
   Center(child: Text('Teams')),
 ];

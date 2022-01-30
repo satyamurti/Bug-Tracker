@@ -1,3 +1,4 @@
+import 'package:bug_tracker/providers/bugs_provider.dart';
 import 'package:bug_tracker/providers/navigation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,6 +42,8 @@ class NavBar extends ConsumerWidget {
                           controller.animateToPage(index,
                               duration: const Duration(seconds: 1),
                               curve: Curves.easeInOut);
+                          ref.read(discussionStateProvider.notifier).value =
+                              null;
                         },
                         tileColor: indexNotifier == index
                             ? Colors.pink.shade900

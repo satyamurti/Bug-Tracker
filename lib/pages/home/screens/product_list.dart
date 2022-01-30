@@ -40,27 +40,6 @@ class ProductsList extends ConsumerWidget {
                                     fontSize: 18,
                                     fontWeight: FontWeight.w900,
                                     color: Colors.black)),
-                            // child: TextField(
-                            //   cursorColor: Colors.pink.shade900,
-                            //   decoration: InputDecoration(
-                            //       prefixIcon: const Icon(
-                            //         Icons.search,
-                            //         color: Colors.grey,
-                            //       ),
-                            //       focusColor: Colors.pink.shade900,
-                            //       prefixIconColor: Colors.grey,
-                            //       focusedBorder: OutlineInputBorder(
-                            //           borderSide: BorderSide(
-                            //               color: Colors.pink.shade900),
-                            //           borderRadius: const BorderRadius.all(
-                            //               Radius.circular(10))),
-                            //       border: OutlineInputBorder(
-                            //           borderSide: BorderSide(
-                            //               color: Colors.pink.shade900),
-                            //           borderRadius: const BorderRadius.all(
-                            //               Radius.circular(10))),
-                            //       hintText: 'Search the product'),
-                            // )
                           ))),
                   const Divider(height: 10),
                   Expanded(
