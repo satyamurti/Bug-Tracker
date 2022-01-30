@@ -1,3 +1,4 @@
+import 'package:bug_tracker/models/auth/user_info.dart';
 import 'package:bug_tracker/pages/error_page.dart';
 import 'package:bug_tracker/pages/home/widgets/nav_bar.dart';
 import 'package:bug_tracker/pages/loading_page.dart';
@@ -14,38 +15,27 @@ class HomePage extends ConsumerStatefulWidget {
   ConsumerState<HomePage> createState() => _HomePageState();
 }
 
+final userInfoProvider = FutureProvider.family((ref, String id) async {
+  final doc =
+      await FirebaseFirestore.instance.collection('users').doc(id).get();
+  return UserInfo.fromMap(doc.data()!);
+});
+
 class _HomePageState extends ConsumerState<HomePage> {
   String get uid => ref.read(authenticationProvider).currentUser!.uid;
-
-  late FutureProvider<Map<String, dynamic>> userInfoProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    userInfoProvider = FutureProvider((ref) async {
-      final doc =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      return doc.data()!;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     final PageController controller = PageController();
     return Scaffold(
-      body: Consumer(builder: (context, ref, _) {
-        final asyncValue = ref.watch(userInfoProvider);
-        return asyncValue.map(
-          data: (data) => debugContent(data.value),
-          // data: (date) => content(controller),
-          loading: (_) => const LoadingPage(),
-          error: (error) => ErrorPage(
-            e: error.error,
-            trace: error.stackTrace,
+      body: ref.watch(userInfoProvider(uid)).map(
+            data: (data) => debugContent(data.value),
+            loading: (_) => const LoadingPage(),
+            error: (error) => ErrorPage(
+              e: error.error,
+              trace: error.stackTrace,
+            ),
           ),
-        );
-        // return ;
-      }),
     );
   }
 
@@ -64,11 +54,11 @@ class _HomePageState extends ConsumerState<HomePage> {
         ],
       );
 
-  Widget debugContent(Map<String, dynamic> userInfo) => Center(
+  Widget debugContent(UserInfo userInfo) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(userInfo.toString()),
+            Text('username = ${userInfo.userName}'),
             ElevatedButton(
               onPressed: () {
                 final auth = ref.watch(authenticationProvider);

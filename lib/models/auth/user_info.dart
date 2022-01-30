@@ -18,17 +18,6 @@ class UserInfo {
     this.bugsOverdue,
     this.isLead,
   );
-  UserInfo.fromSnapshot(Map<String, dynamic> snapshot)
-      : id = snapshot['id'],
-        userName = snapshot['userName'],
-        email = snapshot['email'],
-        orgId = snapshot['orgId'],
-        // cast List<dynamic> to List<String>
-        teams = List<String>.from(snapshot['teams']),
-        isLead = snapshot['isLead'],
-        bugsResovled = snapshot['bugsResolved'],
-        bugsPending = snapshot['bugsPending'],
-        bugsOverdue = snapshot['bugsOverdue'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -41,4 +30,17 @@ class UserInfo {
         'bugsOverdue': bugsOverdue,
         'isLead': isLead,
       };
+
+  UserInfo.fromMap(Map<String, dynamic> map)
+      : id = map['id'],
+        userName = map['userName'],
+        email = map['email'],
+        orgId = map['orgId'],
+        isLead = map['isLead'],
+        teams = (map['teams'] == null)
+            ? []
+            : (map['teams'] as List<dynamic>).map((e) => e as String).toList(),
+        bugsResovled = map['bugsResovled'] ?? 0,
+        bugsPending = map['bugsPending'] ?? 0,
+        bugsOverdue = map['bugsOverdue'] ?? 0;
 }
