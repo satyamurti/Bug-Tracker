@@ -75,7 +75,7 @@ class ProductDetails extends ConsumerWidget {
                                             : Colors.red,
                                     borderRadius: BorderRadius.circular(10)),
                                 child: Text(
-                                  discussion.status,
+                                  discussion.status.toString(),
                                   style: const TextStyle(color: Colors.white),
                                 ),
                               ))
@@ -317,7 +317,7 @@ class ProductDetails extends ConsumerWidget {
                                                     BorderRadius.circular(10)),
                                             padding: const EdgeInsets.all(8),
                                             child: Text(
-                                              e.status,
+                                              e.status.toString(),
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),

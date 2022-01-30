@@ -1,5 +1,7 @@
+import 'package:bug_tracker/models/auth/product.dart';
 import 'package:bug_tracker/models/auth/user_info.dart';
 import 'package:bug_tracker/pages/error_page.dart';
+import 'package:bug_tracker/pages/home/new_bug_page.dart';
 import 'package:bug_tracker/pages/home/widgets/nav_bar.dart';
 import 'package:bug_tracker/pages/loading_page.dart';
 import 'package:bug_tracker/providers/auth_provider.dart';
@@ -15,7 +17,7 @@ class HomePage extends ConsumerStatefulWidget {
   ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-final userInfoProvider = FutureProvider.family((ref, String id) async {
+final userInfoProvider = FutureProvider.family((_, String id) async {
   final doc =
       await FirebaseFirestore.instance.collection('users').doc(id).get();
   return UserInfo.fromMap(doc.data()!);

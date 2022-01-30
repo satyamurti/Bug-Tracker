@@ -1,10 +1,10 @@
 import 'package:bug_tracker/models/auth/user_info.dart';
 
 class Product {
-  String? id;
-  String? orgId;
-  String? name, desc;
-  List<UserInfo>? maintainers, developers;
+  String id;
+  String orgId;
+  String name, desc;
+  List<UserInfo> maintainers, developers;
 
   Product(
     this.id,
@@ -14,7 +14,7 @@ class Product {
     this.maintainers,
     this.developers,
   );
-  Product.fromSnapshot(Map<String, dynamic> snapshot)
+  Product.fromJson(Map<String, dynamic> snapshot)
       : id = snapshot['id'],
         orgId = snapshot['orgId'],
         name = snapshot['name'],

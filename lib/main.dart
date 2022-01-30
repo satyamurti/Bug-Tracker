@@ -29,7 +29,7 @@ final firebaseinitializerProvider = FutureProvider<FirebaseApp>((_) async {
   return await Firebase.initializeApp();
 });
 
-// TODO: add form validation
+// TODO: add form validation in all forms
 class MyApp extends ConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
