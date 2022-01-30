@@ -8,9 +8,9 @@ class BugScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [
-        const Flexible(flex: 3, child: ProductsList()),
-        const Expanded(flex: 8, child: ProductDetails())
+      children: const [
+        Flexible(flex: 3, child: ProductsList()),
+        Expanded(flex: 8, child: ProductDetails())
       ],
     );
   }

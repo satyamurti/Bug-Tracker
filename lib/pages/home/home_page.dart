@@ -36,8 +36,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       body: Consumer(builder: (context, ref, _) {
         final asyncValue = ref.watch(userInfoProvider);
         return asyncValue.map(
-          data: (data) => debugContent(data.value),
-          // data: (date) => content(controller),
+          data: (date) => content(controller),
           loading: (_) => const LoadingPage(),
           error: (error) => ErrorPage(
             e: error.error,
@@ -55,6 +54,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           Flexible(
             flex: 8,
             child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
               pageSnapping: false,
               controller: controller,
               children: navScreens,

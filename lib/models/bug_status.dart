@@ -1,1 +1,1 @@
-enum BugStatus { raised, resolved, duplicate }
+enum BugStatus { raised, resolved, pending }
