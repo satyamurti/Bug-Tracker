@@ -29,6 +29,8 @@ bugs can be regularly updated.
 - Sudhindra
 - Satyamurti D
 
+### PPT
+Link : https://docs.google.com/presentation/d/1DPt1pKO7HDTSJKztEHxErPj2PSGFwN_nI8YQte57LfY/edit?usp=sharing
 
 
 ### 📸 Screenshots
