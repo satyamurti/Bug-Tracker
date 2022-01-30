@@ -1,4 +1,4 @@
-import 'package:bug_tracker/models/auth/team.dart';
+import 'package:bug_tracker/models/auth/product.dart';
 import 'package:bug_tracker/models/auth/user_info.dart';
 import 'package:bug_tracker/providers/user_provider.dart';
 import 'package:flutter/material.dart';
