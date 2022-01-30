@@ -17,7 +17,7 @@ class HomePage extends ConsumerStatefulWidget {
   ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-final userInfoProvider = FutureProvider.family((ref, String id) async {
+final userInfoProvider = FutureProvider.family((_, String id) async {
   final doc =
       await FirebaseFirestore.instance.collection('users').doc(id).get();
   return UserInfo.fromMap(doc.data()!);

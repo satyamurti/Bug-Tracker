@@ -1,12 +1,36 @@
 import 'package:bug_tracker/components/date_picker_button.dart';
 import 'package:bug_tracker/models/auth/product.dart';
 import 'package:bug_tracker/models/auth/user_info.dart';
+import 'package:bug_tracker/models/bug.dart';
 import 'package:bug_tracker/models/bug_priority.dart';
+import 'package:bug_tracker/models/request.dart';
 import 'package:bug_tracker/models/role.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class NewBugPage extends StatelessWidget {
+class NewBugNotifier extends StateNotifier<Request> {
+  NewBugNotifier() : super(Request.initial);
+
+  void createNewBug(Bug bug) async {
+    state = Request.loading;
+    try {
+      await FirebaseFirestore.instance
+          .collection('bugs')
+          .doc(bug.id.toString())
+          .set(bug.toJson());
+      state = Request.succes;
+    } catch (e) {
+      state = Request.failure;
+    }
+  }
+}
+
+final newBugProvider =
+    StateNotifierProvider<NewBugNotifier, Request>((ref) => NewBugNotifier());
+
+class NewBugPage extends ConsumerStatefulWidget {
   final UserInfo userInfo;
   final Product product;
 
@@ -14,10 +38,15 @@ class NewBugPage extends StatelessWidget {
       : super(key: key);
 
   @override
+  ConsumerState<NewBugPage> createState() => _NewBugPageState();
+}
+
+class _NewBugPageState extends ConsumerState<NewBugPage> {
+  @override
   build(context) => Scaffold(
         appBar: AppBar(
           // TODO: show product name instead of id
-          title: Text('New Bug in ${product.name}'),
+          title: Text('New Bug in ${widget.product.name}'),
         ),
         body: content(),
         bottomNavigationBar: Padding(
@@ -25,7 +54,7 @@ class NewBugPage extends StatelessWidget {
           child: SizedBox(
             height: 60,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: onCreateNewBugClick,
               child: const Text('Create New Bug'),
             ),
           ),
@@ -59,7 +88,7 @@ class NewBugPage extends StatelessWidget {
             // TODO: add check for min 1 maintainer
             DropdownSearch.multiSelection(
               mode: Mode.MENU,
-              items: product.maintainers + product.devs,
+              items: widget.product.maintainers + widget.product.devs,
               selectedItems: const [],
               dropdownSearchDecoration:
                   const InputDecoration(label: Text('Assigned To')),
@@ -72,4 +101,8 @@ class NewBugPage extends StatelessWidget {
           ],
         ),
       );
+
+  void onCreateNewBugClick() {
+    final notifier = ref.read(newBugProvider.notifier);
+  }
 }
