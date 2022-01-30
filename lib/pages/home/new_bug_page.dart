@@ -117,7 +117,7 @@ class _NewBugPageState extends ConsumerState<NewBugPage> {
             // TODO: add check for min 1 maintainer
             DropdownSearch<String>.multiSelection(
               mode: Mode.MENU,
-              items: widget.product.maintainers + widget.product.devs,
+              items: (widget.product.maintainers + widget.product.developers).map((e) => e.userName).toList(),
               selectedItems: const [],
               dropdownSearchDecoration:
                   const InputDecoration(label: Text('Assigned To')),
@@ -162,10 +162,15 @@ class _NewBugPageState extends ConsumerState<NewBugPage> {
       description.text,
       widget.userInfo.id,
       widget.product.id,
+      widget.product.orgId,
       visibleTo,
       BugStatus.raised,
       priority,
+      [],
       assignees,
+      // TODO maintianer fields in form
+      [],
+      DateTime.now(),
       deadline,
     );
     final notifier = ref.read(newBugProvider.notifier);

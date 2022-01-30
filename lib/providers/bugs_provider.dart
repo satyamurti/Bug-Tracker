@@ -18,7 +18,8 @@ class BugsProvider {
           .snapshots()
           .map((snapshot) => snapshot.docs.map((document) {
                 var product = Bug.fromJson(document.data());
-                product.id = document.id;
+                // TODO: someone fix this
+                // product.id = document.id;
                 print(product.productId);
                 return product;
               }).toList());

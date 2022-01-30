@@ -30,24 +30,14 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     final PageController controller = PageController();
     return Scaffold(
-      body: ref.watch(userInfoProvider(uid)).map(
-            // TODO: remove this in the end
-            data: (data) => NewBugPage(
-              userInfo: data.value,
-              product: Product(
-                '1',
-                '2',
-                'Dalal Street',
-                'Best Pragyan Event',
-                ['Siva', 'Satya'],
-                ['Ajitha', 'Dhruv', 'Sailesh'],
-              ),
-            ),
-            loading: (_) => const LoadingPage(),
-            error: (error) => ErrorPage(
-              e: error.error,
-              trace: error.stackTrace,
-            ),
+      body: Consumer(builder: (context, ref, _) {
+        final asyncValue = ref.watch(userInfoProvider(uid));
+        return asyncValue.map(
+          data: (date) => content(controller),
+          loading: (_) => const LoadingPage(),
+          error: (error) => ErrorPage(
+            e: error.error,
+            trace: error.stackTrace,
           ),
         );
       }),
