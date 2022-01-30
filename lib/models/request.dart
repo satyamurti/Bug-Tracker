@@ -1,6 +1,6 @@
 enum Request{
   initial,
   loading,
-  succes,
+  success,
   failure,
 }

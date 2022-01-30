@@ -6,6 +6,7 @@ import 'package:bug_tracker/models/bug_priority.dart';
 import 'package:bug_tracker/models/bug_status.dart';
 import 'package:bug_tracker/models/request.dart';
 import 'package:bug_tracker/models/role.dart';
+import 'package:bug_tracker/util/snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,9 @@ class NewBugNotifier extends StateNotifier<Request> {
     try {
       await FirebaseFirestore.instance
           .collection('bugs')
-          .doc(bug.id.toString())
+          .doc(bug.id)
           .set(bug.toJson());
-      state = Request.succes;
+      state = Request.success;
     } catch (e) {
       state = Request.failure;
     }
@@ -51,23 +52,24 @@ class _NewBugPageState extends ConsumerState<NewBugPage> {
   late DateTime deadline;
 
   @override
-  build(context) => Scaffold(
-        appBar: AppBar(
-          // TODO: show product name instead of id
-          title: Text('New Bug in ${widget.product.name}'),
-        ),
-        body: content(),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(12),
-          child: SizedBox(
-            height: 60,
-            child: ElevatedButton(
-              onPressed: onCreateNewBugClick,
-              child: const Text('Create New Bug'),
-            ),
-          ),
-        ),
-      );
+  build(context) {
+    ref.listen<Request>(newBugProvider, (_, state) {
+      switch (state) {
+        case Request.success:
+          showSnackBar(context, 'Successfully created new bug');
+          break;
+        case Request.failure:
+          showSnackBar(context, 'Failed to created new bug');
+          break;
+        default:
+      }
+    });
+    return Scaffold(
+      appBar: AppBar(title: Text('New Bug in ${widget.product.name}')),
+      body: content(),
+      bottomNavigationBar: bottom(),
+    );
+  }
 
   content() => Padding(
         padding: const EdgeInsets.all(16),
@@ -81,6 +83,9 @@ class _NewBugPageState extends ConsumerState<NewBugPage> {
             TextField(
               controller: description,
               decoration: const InputDecoration(labelText: 'Description'),
+              keyboardType: TextInputType.multiline,
+              minLines: 1,
+              maxLines: 3,
             ),
             const SizedBox(height: 20),
             DropdownSearch<String>(
@@ -127,6 +132,29 @@ class _NewBugPageState extends ConsumerState<NewBugPage> {
         ),
       );
 
+  bottom() => Padding(
+        padding: const EdgeInsets.all(12),
+        child: SizedBox(
+          height: 60,
+          child: () {
+            final state = ref.watch(newBugProvider);
+            switch (state) {
+              case Request.loading:
+                return Wrap(
+                  children: const [
+                    Center(child: CircularProgressIndicator()),
+                  ],
+                );
+              default:
+                return ElevatedButton(
+                  onPressed: onCreateNewBugClick,
+                  child: const Text('Create New Bug'),
+                );
+            }
+          }(),
+        ),
+      );
+
   void onCreateNewBugClick() {
     final newBug = Bug(
       DateTime.now().millisecondsSinceEpoch.toString(),
@@ -140,9 +168,7 @@ class _NewBugPageState extends ConsumerState<NewBugPage> {
       assignees,
       deadline,
     );
-    print(newBug.toJson());
-    // Timestamp.fromDate(date)
-    // final notifier = ref.read(newBugProvider.notifier);
-    // notifier.createNewBug(newBug);
+    final notifier = ref.read(newBugProvider.notifier);
+    notifier.createNewBug(newBug);
   }
 }
