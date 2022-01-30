@@ -36,12 +36,13 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final initialize = ref.watch(firebaseinitializerProvider);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: initialize.when(
-        data: (data) => CreateProductPage(),
+        data: (data) => AuthChecker(),
         loading: () => const LoadingPage(),
         error: (e, stackTrace) => ErrorPage(
           e: e,

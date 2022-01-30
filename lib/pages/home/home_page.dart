@@ -28,14 +28,17 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     final PageController controller = PageController();
     return Scaffold(
-      body: ref.watch(userInfoProvider(uid)).map(
-            data: (data) => debugContent(data.value),
-            loading: (_) => const LoadingPage(),
-            error: (error) => ErrorPage(
-              e: error.error,
-              trace: error.stackTrace,
-            ),
+      body: Consumer(builder: (context, ref, _) {
+        final asyncValue = ref.watch(userInfoProvider(uid));
+        return asyncValue.map(
+          data: (date) => content(controller),
+          loading: (_) => const LoadingPage(),
+          error: (error) => ErrorPage(
+            e: error.error,
+            trace: error.stackTrace,
           ),
+        );
+      }),
     );
   }
 
@@ -45,8 +48,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           Flexible(
             flex: 8,
             child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
               pageSnapping: false,
-              scrollDirection: Axis.vertical,
               controller: controller,
               children: navScreens,
             ),
