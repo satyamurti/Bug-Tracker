@@ -3,6 +3,7 @@ import 'package:bug_tracker/models/auth/product.dart';
 import 'package:bug_tracker/models/auth/user_info.dart';
 import 'package:bug_tracker/models/bug.dart';
 import 'package:bug_tracker/models/bug_priority.dart';
+import 'package:bug_tracker/models/bug_status.dart';
 import 'package:bug_tracker/models/request.dart';
 import 'package:bug_tracker/models/role.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -42,6 +43,13 @@ class NewBugPage extends ConsumerStatefulWidget {
 }
 
 class _NewBugPageState extends ConsumerState<NewBugPage> {
+  TextEditingController title = TextEditingController(),
+      description = TextEditingController();
+  Role visibleTo = Role.lead;
+  BugPriority priority = BugPriority.minor;
+  List<String> assignees = [];
+  late DateTime deadline;
+
   @override
   build(context) => Scaffold(
         appBar: AppBar(
@@ -65,44 +73,76 @@ class _NewBugPageState extends ConsumerState<NewBugPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const TextField(decoration: InputDecoration(labelText: 'Title')),
-            const TextField(
-                decoration: InputDecoration(labelText: 'Description')),
+            TextField(
+              controller: title,
+              decoration: const InputDecoration(labelText: 'Title'),
+            ),
+            // TODO: multiline
+            TextField(
+              controller: description,
+              decoration: const InputDecoration(labelText: 'Description'),
+            ),
             const SizedBox(height: 20),
-            DropdownSearch(
+            DropdownSearch<String>(
               mode: Mode.MENU,
               items: roleList,
               selectedItem: roleList[0],
               dropdownSearchDecoration:
                   const InputDecoration(label: Text('Visible until')),
+              onChanged: (s) {
+                if (s != null) {
+                  visibleTo = roleFromString(s);
+                }
+              },
             ),
             const SizedBox(height: 20),
-            DropdownSearch(
+            DropdownSearch<String>(
               mode: Mode.MENU,
               items: priorityList,
               selectedItem: priorityList[0],
               dropdownSearchDecoration:
                   const InputDecoration(label: Text('Priority')),
+              onChanged: (s) {
+                if (s != null) {
+                  priority = priorityFromString(s);
+                }
+              },
             ),
             const SizedBox(height: 20),
             // TODO: add check for min 1 maintainer
-            DropdownSearch.multiSelection(
+            DropdownSearch<String>.multiSelection(
               mode: Mode.MENU,
               items: widget.product.maintainers + widget.product.devs,
               selectedItems: const [],
               dropdownSearchDecoration:
                   const InputDecoration(label: Text('Assigned To')),
+              onChanged: (v) => assignees = v,
             ),
             const SizedBox(height: 20),
             DatePickerButton(
-              text: 'Deadline',
-              onDateSelected: (date) => print('Selected date = $date'),
+              text: 'Select a Deadline',
+              onDateSelected: (date) => deadline = date,
             ),
           ],
         ),
       );
 
   void onCreateNewBugClick() {
-    final notifier = ref.read(newBugProvider.notifier);
+    final newBug = Bug(
+      DateTime.now().millisecondsSinceEpoch.toString(),
+      title.text,
+      description.text,
+      widget.userInfo.id,
+      widget.product.id,
+      visibleTo,
+      BugStatus.raised,
+      priority,
+      assignees,
+      deadline,
+    );
+    print(newBug.toJson());
+    // Timestamp.fromDate(date)
+    // final notifier = ref.read(newBugProvider.notifier);
+    // notifier.createNewBug(newBug);
   }
 }

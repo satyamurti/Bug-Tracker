@@ -1,5 +1,5 @@
+import 'package:bug_tracker/util/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class DatePickerButton extends StatefulWidget {
   final String text;
@@ -23,7 +23,7 @@ class _DatePickerButtonState extends State<DatePickerButton> {
   build(context) => ElevatedButton(
         onPressed: showDialog,
         child: Text(
-          firstSelect ? widget.text : DateFormat('dd-MM-yyyy').format(date),
+          firstSelect ? widget.text : 'Deadline: ${dateFormat.format(date)}',
         ),
       );
 
