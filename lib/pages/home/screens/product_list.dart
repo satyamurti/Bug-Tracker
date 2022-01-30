@@ -1,4 +1,4 @@
-import 'package:bug_tracker/models/auth/product.dart';
+import 'package:bug_tracker/models/auth/team.dart';
 import 'package:bug_tracker/providers/bugs_provider.dart';
 import 'package:bug_tracker/providers/products_provider.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class ProductsList extends ConsumerWidget {
 
     return Container(
         decoration: BoxDecoration(color: Colors.pink.shade100.withOpacity(0.5)),
-        child: StreamBuilder<List<Product>>(
+        child: StreamBuilder<List<Team>>(
             stream: products.getUserList(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
