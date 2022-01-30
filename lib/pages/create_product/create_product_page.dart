@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Create a dummy product using product model
-var product = Product('id', 'name', 'desc', 'orgId', [], []);
+var product = Product('id', 'name', 'desc', 'orgId', null, null);
 
 // ignore: must_be_immutable
 class CreateProductPage extends ConsumerStatefulWidget {
